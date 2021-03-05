@@ -1,0 +1,219 @@
+<section class="content-header">
+  <div class="detail-header-left">
+    <a (click)="location.back();" class="back-title-link" href="javascript:;">
+      <i class="fa fa-angle-left"></i>
+    </a>
+    <span class="building-detail-address">
+      <i class="fa fa-map-pin"></i>
+      {{locationObj?.name}}
+    </span>
+  </div>
+  <div class="filter-form-field">
+    <ul class="filter-list-form">
+      <li class="d-flex align-items-center">
+        <label class="form-label mb-0 m-r-10">Location</label>
+        <div class="support-field">
+          <div class="field-input">
+            <mat-form-field class="">
+              <mat-select (selectionChange)="SetLocation($event.value)" placeholder="Select Location" [(ngModel)]="locationObj['guid']" [ngModelOptions]="{standalone: true}">
+                <mat-option *ngFor="let location of locationList" [value]="location.value">
+                  {{location.text}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+<div class="content">
+  <div class="main-page dashboard">
+    <div class="row dashboardtop-widget">
+      <div class="col-xl-4 col-lg-4">
+        <div class="dashboard-chart bggreenlwidget text-center">
+          <div class="widget-readings-box">
+            <div class="widget-reading-left">
+              <h4>{{overview?.totalDevices}}</h4>
+              <p>Total</p>
+            </div>
+            <div class="widget-reading-right">
+              <h4>{{overview?.totalConnected}}</h4>
+              <p>Connected</p>
+              <h4>{{overview?.totalDisConnected}}</h4>
+              <p>Disconnected</p>
+            </div>
+          </div>
+          <p class="small-widget-heading">Total Refrigerators</p>
+        </div>
+      </div>
+      <div class="col-xl-4 col-lg-4">
+        <div class="dashboard-chart bgpinkwidget text-center location-detail-energy-widget">
+          <div class="widget-readings-box">
+            <div class="widget-reading-left">
+              <h4>{{overview?.totalEnergyCount | shortNumberFixnumber}} KW</h4>
+              <p>Total</p>
+            </div>
+            <div class="widget-reading-right">
+              <ul class="reading-item-list">
+                <li class="reading-item">
+                  <span class="elevator-status-indicator status-danger"></span>
+                  <div>
+                    <span
+                      [matTooltip]="overview?.maxDeviceName"
+                      matTooltipPosition="before">{{overview?.maxDeviceName}}</span>
+                    <span>{{overview?.maxDeviceCount}}KW</span>
+                  </div>
+                </li>
+                <li class="reading-item">
+                  <span class="elevator-status-indicator status-success"></span>
+                  <div>
+                    <span
+                      [matTooltip]="overview?.minDeviceName"
+                      matTooltipPosition="before">{{overview?.minDeviceName}}</span>
+                    <span>{{overview?.minDeviceCount}}KW</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <p class="small-widget-heading">Energy Consumption</p>
+        </div>
+      </div>
+      <div class="col-xl-2 col-lg-4">
+        <div class="dashboard-chart bgyellowwidget text-center">
+          <h4>{{overview?.totalUnderMaintenanceCount}}</h4>
+          <p class="small-widget-heading">Maintenance</p>
+        </div>
+      </div>
+      <div class="col-xl-2 col-lg-4">
+        <div class="dashboard-chart bgorangewidget text-center">
+          <h4>{{overview?.totalAlerts}}</h4>
+          <p class="small-widget-heading">Total Alerts (Today)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-lg-8">
+      <div class="drag-body dashboard-widget m-b-30">
+        <div class="panel-heading">
+          <h5 class="panel-title"> Refrigerators </h5>
+        </div>
+        <mat-card class="dashboard-card">
+          <div class="location-carousel-wrapper">
+            <ng-container *ngIf="devices.length">
+              <ngx-slick-carousel class="carousel"
+                                  #refrigeratorCarousel="slick-carousel"
+                                  [config]="slideConfig">
+                <div ngxSlickItem *ngFor="let device of devices">
+                  <div class="user-grid-box">
+                    <div class="grid-inner-flex d-flex align-items-center">
+                      <!-- <div class="user-image-box">
+                        <img alt="" class="img-fluid ng-star-inserted"
+                          src="../../../../assets/images/refrigerator-image.svg">
+                      </div>            -->
+                      <div class="user-detail-box">
+                        <h3 class="user-name">
+                          <a href="javascript:;"
+                          [routerLink]="['/refrigerators/dashboard',device['guid']]"
+                          [matTooltip]="device.name"
+                          matTooltipPosition="below">
+                            {{device?.name}}
+                          </a>
+                        </h3>
+                        <p class="user-details">Status <span class="status-text available" [ngClass]="{'status-off':!device.isConnected}">{{device.isConnected?'Connected':'Disconnected'}}</span></p>
+                        <p class="user-details">Energy <span>{{device.totalEnergy?device.totalEnergy:0}} KW</span></p>
+                        <p class="user-details">Alerts <span><a [routerLink]="['/alerts/refrigerator/',device.guid]">{{device.totalAlert?device.totalAlert:0}}</a></span></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ngx-slick-carousel>
+            </ng-container>
+            <ng-container *ngIf="!devices.length">
+              <div class="centerclass">No records found</div>
+            </ng-container>
+          </div>
+        </mat-card>
+      </div>
+
+      <div class="drag-body dashboard-widget m-b-30">
+
+        <div class="panel-heading">
+          <h5 class="panel-title"> Energy Consumption </h5>
+          <div class="m-r-20">
+            <mat-radio-group (change)="changeGraphFilter($event)" aria-label="Select an option" class="d-flex align-items-center">
+              <mat-radio-button [checked]="type == 'd'?'true':'false'" value="Day">Day</mat-radio-button>
+              <mat-radio-button [checked]="type == 'w'?'true':'false'" value="Week">Week</mat-radio-button>
+              <mat-radio-button [checked]="type == 'm'?'true':'false'" value="Month">Month</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <mat-card class="dashboard-card mat-card">
+          <!-- <img style="height: 300px;" src="../../../../assets/images/bar-graph-lg-2.jpg"  /> -->
+          <google-chart  [data]="columnChart "></google-chart>
+
+      </mat-card>
+
+      </div>
+
+    </div>
+
+    <div class="col-lg-4">
+      <div class="drag-body dashboard-widget">
+        <div class="panel-heading">
+          <h5 class="panel-title w-100"> Alerts </h5>
+          <div style="margin-right: 20px;" class="tab-link-bar" *ngIf="alerts?.length>0">
+            <a class="text-nowrap" [routerLink]="['/alerts/location/',locationGuid]"
+               href="javascript:;">View All</a>
+          </div>
+        </div>
+        <mat-card class="dashboard-card mat-card pt-0">
+          <ng-scrollbar class="my-scrollbar m-b-50" trackX="false" trackY="true"
+          autohide="false" [compact]="false"
+          *ngIf="alerts?.length>0" [ngStyle]="{'height': '590px'}">
+            <ul class="alerts-dashboard">
+              <li [ngClass]="alert['severity']" *ngFor="let alert of alerts">
+                <span class="alerts-date">{{getLocalDate(alert['eventDate'])}}</span>
+                <span class="alerts-info">{{alert['message']}}</span>
+                <span class="alerts-location">{{alert['deviceName']}}</span>
+              </li>
+            </ul>
+          </ng-scrollbar>
+          <div *ngIf="alerts?.length==0" class="centerclass location-details-alerts-empty">
+            No records found
+          </div>
+          <div class="alert-indicator-wrapper">
+            <div class="alert-indicator-list">
+              <div class="alert-indicator Critical">
+                <span class="legend"></span>
+                <span class="alert-text">Critical</span>
+              </div>
+              <div class="alert-indicator Information">
+                <span class="legend"></span>
+                <span class="alert-text">Information</span>
+              </div>
+              <div class="alert-indicator Major">
+                <span class="legend"></span>
+                <span class="alert-text">Major</span>
+              </div>
+              <div class="alert-indicator Minor">
+                <span class="legend"></span>
+                <span class="alert-text">Minor</span>
+              </div>
+              <div class="alert-indicator Warning">
+                <span class="legend"></span>
+                <span class="alert-text">Warning</span>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+
+  </div>
+
+</div>

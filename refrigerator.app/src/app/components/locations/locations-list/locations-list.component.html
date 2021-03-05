@@ -1,0 +1,73 @@
+<section class="content-header">
+  <h1>Location Listing</h1>
+  <div class="content-header-action align-items-center">
+    <ul class="legend-list mb-0 m-r-10">
+      <li><span class="status-available"></span>Connected</li>
+      <li><span class="status-unavailable"></span>Disconnected</li>
+      <!-- <li><span class="status-pending"></span>Warning </li> -->
+    </ul>
+    <div>
+      <app-search-render [searchValue]="searchParameters.searchText" (searchEvent)="searchTextCallback($event)">
+      </app-search-render>
+    </div>
+    <!--<form class="">
+      <div class="search-part">
+        <mat-form-field class="w-auto form-inline my-lg-0">
+          <input class="search" matInput placeholder="Search" autocomplete="off">
+          <button type="button" matSuffix mat-button class="search-btn">
+            <img src="../../../assets/images/search-icon.svg" alt="">
+          </button>
+        </mat-form-field>
+      </div>
+    </form>-->
+    <div class="p-l-10">
+      <button mat-flat-button color="primary" [routerLink]="['/locations/add']">Add Location</button>
+    </div>
+  </div>
+</section>
+<div class="content">
+  <div class="user-grid-wrapper custom-height-grid-box">
+    <div class="row">
+      <div class="col-lg-4 col-ld-3" *ngFor="let location of locationList">
+        <div class="user-grid-box">
+
+          <div (click)="activeInactiveLocation(location.guid, true, location.name)"
+               *ngIf="location['isActive']" title="Change Status" class="cursor user-status-indicator status-green"></div>
+          <div (click)="activeInactiveLocation(location.guid, false, location.name)"
+               *ngIf="!location['isActive']" title="Change Status" class="cursor user-status-indicator status-red"></div>
+          <div class="grid-inner-flex d-flex align-items-center">
+            <div class="user-image-box">
+              <img alt="" class="img-fluid"
+                   src="{{location['image'] == '00000000-0000-0000-0000-000000000000' || location['image'] == null || location['image'] == '' ? _appConstant.noImg: mediaUrl + location['image']}}">
+            </div>
+            <div class="user-detail-box">
+              <h3 class="user-name"><a href="javascript:;" [routerLink]="['/locations/details',location['guid']]">{{location.name}}</a></h3>
+              <p class="user-details">
+                Refrigerators
+                <span class="plan-list-status-dot available"></span> <span>{{location.totalConnected}}</span>
+                <span class="plan-list-status-dot unavailable"></span> <span>{{location.totalDisconnected}}</span>
+              </p>
+              <p class="user-details">Alerts <span>{{location.totalAlert}}</span></p>
+              <p class="user-details">Maintenance <span>{{location.totalUnderMaintenance}}</span></p>
+            </div>
+          </div>
+          <div class="user-actions d-flex flex-wrap">
+            <div class="user-actions-cta text-center">
+              <a class="green" [routerLink]="['/locations',location.guid]" title="Edit">
+                <img src="../../../assets/images/icon-edit.svg" alt="Edit">
+              </a>
+            </div>
+            <div class="user-actions-cta text-center">
+              <a href="javascript:;" data-toggle="modal" data-target="#deviceDeleteModal"
+                 (click)="deleteModel(location)" title="Delete">
+                <img src="../../../assets/images/icon-delete.svg" alt="Delete">
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!locationList?.length && searchParameters['searchText'] === ''" class="text-center m-auto d-flex align-items-center" style="height: 100px">No location exists.</div>
+      <div *ngIf="!locationList?.length  && searchParameters['searchText'] !== ''" class="text-center m-auto d-flex align-items-center" style="height: 100px">No location found.</div>
+    </div>
+  </div>
+</div>

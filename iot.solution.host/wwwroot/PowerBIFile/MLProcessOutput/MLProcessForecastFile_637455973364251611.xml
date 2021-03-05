@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TopElement>
+  <Item>
+    <time>12/8/2020 12:11:42 PM</time>
+    <cpid>6c63fff0573649339345de7bd00b38a5</cpid>
+    <deviceId>6c63fff0573649339345de7bd00b38a5-SR2</deviceId>
+    <co2>760.288355857489</co2>
+    <currentin>11.5802634516099</currentin>
+    <temp>12.1984784801621</temp>
+    <vibration>1.00266202724884</vibration>
+    <voltage>80.3957118457796</voltage>
+    <weight>227.914417319267</weight>
+    <origin>Forecasted</origin>
+    <power_consumed>931.003523553846</power_consumed>
+  </Item>
+  <Item>
+    <time>12/8/2020 12:11:57 PM</time>
+    <cpid>6c63fff0573649339345de7bd00b38a5</cpid>
+    <deviceId>6c63fff0573649339345de7bd00b38a5-SR2</deviceId>
+    <co2>677.664344754949</co2>
+    <currentin>10.2033348656278</currentin>
+    <temp>11.5916319603852</temp>
+    <vibration>0.704639178121011</vibration>
+    <voltage>70.8150652325834</voltage>
+    <weight>254.212903048852</weight>
+    <origin>Forecasted</origin>
+    <power_consumed>722.549824099329</power_consumed>
+  </Item>
+  <Item>
+    <time>12/8/2020 12:12:12 PM</time>
+    <cpid>6c63fff0573649339345de7bd00b38a5</cpid>
+    <deviceId>6c63fff0573649339345de7bd00b38a5-SR2</deviceId>
+    <co2>749.210678934474</co2>
+    <currentin>11.0502379372019</currentin>
+    <temp>10.9048206878608</temp>
+    <vibration>0.908197663829902</vibration>
+    <voltage>66.4292722916111</voltage>
+    <weight>239.833765755542</weight>
+    <origin>Forecasted</origin>
+    <power_consumed>734.059264817479</power_consumed>
+  </Item>
+  <Item>
+    <time>12/8/2020 12:12:27 PM</time>
+    <cpid>6c63fff0573649339345de7bd00b38a5</cpid>
+    <deviceId>6c63fff0573649339345de7bd00b38a5-SR2</deviceId>
+    <co2>658.723721850587</co2>
+    <currentin>8.97473514234403</currentin>
+    <temp>10.1627942642999</temp>
+    <vibration>0.961476631909997</vibration>
+    <voltage>55.9515564543245</voltage>
+    <weight>257.883082604309</weight>
+    <origin>Forecasted</origin>
+    <power_consumed>502.150399979472</power_consumed>
+  </Item>
+  <Item>
+    <time>12/8/2020 12:12:42 PM</time>
+    <cpid>6c63fff0573649339345de7bd00b38a5</cpid>
+    <deviceId>6c63fff0573649339345de7bd00b38a5-SR2</deviceId>
+    <co2>675.2453816076</co2>
+    <currentin>9.12965387214329</currentin>
+    <temp>10.0758986649238</temp>
+    <vibration>0.940589961263426</vibration>
+    <voltage>56.0816173906629</voltage>
+    <weight>260.783343525146</weight>
+    <origin>Forecasted</origin>
+    <power_consumed>512.005755366724</power_consumed>
+  </Item>
+</TopElement>

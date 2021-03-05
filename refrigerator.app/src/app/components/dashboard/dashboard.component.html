@@ -1,0 +1,281 @@
+<section class="content-header">
+  <h1>Dashboard</h1>
+  <div class="content-header-action">
+		<div class="tab-link-bar">
+			<a [routerLink]="['/dynamic-dashboard']" href="javascript:;">Tryout New Dashboard</a>
+		</div>
+	</div>
+</section>
+<div class="main-page dashboard" *ngIf="!isDynamicDashboard">
+  <div class="row dashboardtop-widget">
+    <div class="col-xl-2 col-lg-3">
+      <div class="dashboard-chart bgbluewidget text-center">
+        <h4><a [routerLink]="['/locations']">{{overview?.totalEntities}}</a></h4>
+        <p class="small-widget-heading">Total Locations</p>
+      </div>
+    </div>
+    <div class="col-xl-3 col-lg-4">
+      <div class="dashboard-chart bggreenlwidget text-center">
+        <div class="widget-readings-box">
+          <div class="widget-reading-left">
+            <h4>{{overview?.totalDevices}}</h4>
+            <p>Total</p>
+          </div>
+          <div class="widget-reading-right">
+            <h4>{{overview?.totalConnected}}</h4>
+            <p>Connected</p>
+            <h4>{{overview?.totalDisConnected}}</h4>
+            <p>Disconnected</p>
+          </div>
+        </div>
+        <p class="small-widget-heading">Total Refrigerators</p>
+      </div>
+    </div>
+    <div class="col-xl-3 col-lg-4">
+      <div class="dashboard-chart bgpinkwidget text-center">
+        <div class="widget-readings-box">
+          <div class="widget-reading-left">
+            <h4>{{overview?.totalEnergyCount | shortNumberFixnumber}} KW</h4>
+            <p>Total</p>
+          </div>
+          <div class="widget-reading-right">
+            <ul class="reading-item-list">
+              <li class="reading-item">
+                <span class="elevator-status-indicator status-danger"></span>
+                <div>
+                  <span
+                  [matTooltip]="overview?.maxDeviceName"
+                  matTooltipPosition="before"
+                  >{{overview?.maxDeviceName}}</span>
+                  <span>{{overview?.maxDeviceCount}}KW</span>
+                </div>
+              </li>
+              <li class="reading-item">
+                <span class="elevator-status-indicator status-success"></span>
+                <div>
+                  <span
+                  [matTooltip]="overview?.maxDeviceName"
+                  matTooltipPosition="before"
+                  >{{overview?.minDeviceName}}</span>
+                  <span>{{overview?.minDeviceCount}}KW</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <p class="small-widget-heading">Energy Consumption</p>
+      </div>
+    </div>
+    <div class="col-xl-2 col-lg-3">
+      <div class="dashboard-chart bgyellowwidget text-center">
+        <h4>{{overview?.totalUnderMaintenanceCount}}</h4>
+        <p class="small-widget-heading">Maintenance</p>
+      </div>
+    </div>
+    <div class="col-xl-2 col-lg-3">
+      <div class="dashboard-chart bgorangewidget text-center">
+        <h4>{{overview?.totalAlerts}}</h4>
+        <p class="small-widget-heading">Total Alerts (Today)</p>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xl-8  m-b-30">
+      <div class="drag-body dashboard-widget h-100">
+        <div class="panel-heading">
+          <h5 class="panel-title"> Locations </h5>
+          <div class="mr-3">
+            <button mat-flat-button type="button" color="primary" title="Map" [ngClass]=" mapview ? 'active' : ''"
+                    (click)="mapview = !mapview">
+              Map
+            </button>
+            <button mat-flat-button type="button" color="primary" class="ml-3" title="List"
+                    [ngClass]="!mapview ? 'active' : ''" (click)="mapview = !mapview">
+              List
+            </button>
+          </div>
+        </div>
+        <mat-card class="dashboard-card mat-card p-0">
+          <div *ngIf="!mapview" id="map-list">
+            <div class="map-list-wrapper">
+              <div class="user-grid-wrapper user-grid-wrapper-dashboard p-3 pb-0">
+                <section class="content-header p-t-10">
+                  <h2 class="panel-title"> Locations </h2>
+                  <div class="ml-auto content-header-action">
+                    <form>
+                      <div>
+                        <app-search-render [searchValue]="searchParameters.searchText" (searchEvent)="searchTextCallback($event)">
+                        </app-search-render>
+                      </div>
+                      <div class="p-l-20">
+                        <button [routerLink]="['/locations/add']" type="button" mat-flat-button color="primary"
+                                lass="text-white">
+                          Add Location
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </section>
+                <div class="row">
+                  <div class="col-ld-4 col-lg-4 col-xl-4 m-b-30" *ngFor="let location of locationList">
+                    <div class="user-grid-box">
+                      <div class="user-status-indicator status-green"></div>
+                      <div class="grid-inner-flex d-flex align-items-center">
+                        <div class="user-image-box">
+                          <img alt="" class="img-fluid ng-star-inserted"
+                               src="{{location['image'] == '00000000-0000-0000-0000-000000000000' || location['image'] == null || location['image'] == '' ? _appConstant.noImg: mediaUrl + location['image']}}">
+                        </div>
+                        <div class="user-detail-box">
+                          <h3 class="user-name">
+                            <a [routerLink]="['/locations/details',location['guid']]">{{location['name']}}</a>
+                          </h3>
+                          <p class="user-details">Refrigerator <span>{{location.totalDevices}}</span></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="locationList.length === 0" class="centerclass">No records found</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="mapview" id="map-view">
+            <agm-map [latitude]="lat" [longitude]="lng">
+              <agm-marker *ngFor="let location of locationList" [latitude]="location.latitude ? location.latitude : lat"
+                          [longitude]="location.longitude ? location.longitude : lng"
+                          [iconUrl]="{ url: '../../../../assets/images/icon-location.svg'}">
+                <agm-info-window [isOpen]="true" #infoWindow>
+                  <p class="m-b-5" style="font-family: 'ApercuPro-Bold-Web';font-size:16px;">{{location.name}}</p>
+                  <p class="m-b-5"><span style="min-width:75px;display:inline-block;">Refrigerator</span> <span style="display:inline-block;margin-left: 15px;">{{location.totalDevices}}</span></p>
+                  <p class="m-b-5"><span style="min-width:75px;display:inline-block;">Alerts</span> <span style="display:inline-block;margin-left: 15px;">{{location.totalAlert}}</span></p>
+                </agm-info-window>
+              </agm-marker>
+            </agm-map>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+    <div class="col-xl-4 ">
+      <div class="drag-body dashboard-widget m-b-30">
+        <div class="panel-heading">
+          <h5 class="panel-title"> Upcoming Maintenance </h5>
+        </div>
+        <mat-card class="dashboard-card mat-card">
+          <ng-scrollbar class="my-scrollbar m-b-50" trackX="false" trackY="true"
+          autohide="false" [compact]="false"
+          *ngIf="upcomingMaintenance.length">
+            <ul class="maintenance-card-list ">
+              <li *ngFor="let maintenance of upcomingMaintenance">
+                <span class="maintain-name">{{maintenance.deviceName}} - {{maintenance.entityName}}</span>
+                <span class="maintain-details">{{maintenance.description}}</span>
+                <div class="maintenance-date text-right">
+                  <span>{{getLocalDate(maintenance['startDate'])}}</span>
+                </div>
+              </li>
+            </ul>
+          </ng-scrollbar>
+          <div *ngIf="upcomingMaintenance.length==0" class="no-records-maintenance centerclass">No records found</div>
+        </mat-card>
+      </div>
+      <div class="drag-body dashboard-widget">
+        <div class="panel-heading">
+          <h5 class="panel-title w-100"> Alerts </h5>
+          <div style="margin-right: 20px;" class="tab-link-bar" *ngIf="alerts?.length>0">
+            <a class="text-nowrap" [routerLink]="['/alerts']" href="javascript:;">View All</a>
+          </div>
+        </div>
+        <mat-card class="dashboard-card mat-card pt-0">
+          <ng-container *ngIf="alerts.length>0">
+            <ng-scrollbar class="my-scrollbar m-b-50 main-dashboard-scroll" trackX="false" trackY="true"
+              autohide="false" [compact]="false">
+              <ul class="alerts-dashboard dashboard-alerts-custom">
+                <li [ngClass]="alert['severity']" *ngFor="let alert of alerts">
+                  <span class="alerts-date">{{getLocalDate(alert['eventDate'])}}</span>
+                  <span class="alerts-info">{{alert['message']}}</span>
+                  <span class="alerts-location">{{alert['entityName']}}, {{alert['deviceName']}}</span>
+                </li>
+              </ul>
+            </ng-scrollbar>
+          </ng-container>
+          <ng-container *ngIf="alerts.length==0">
+            <div class="centerclass no-records-wrapper">No records found</div>
+          </ng-container>
+          <div class="alert-indicator-wrapper">
+            <div class="alert-indicator-list">
+              <div class="alert-indicator Critical">
+                <span class="legend"></span>
+                <span class="alert-text">Critical</span>
+              </div>
+              <div class="alert-indicator Information">
+                <span class="legend"></span>
+                <span class="alert-text">Information</span>
+              </div>
+              <div class="alert-indicator Major">
+                <span class="legend"></span>
+                <span class="alert-text">Major</span>
+              </div>
+              <div class="alert-indicator Minor">
+                <span class="legend"></span>
+                <span class="alert-text">Minor</span>
+              </div>
+              <div class="alert-indicator Warning">
+                <span class="legend"></span>
+                <span class="alert-text">Warning</span>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="default-system-dashboard" *ngIf="isDynamicDashboard && dashboardList.length > 0">
+	<app-size-detector (deviceSizeChange)="deviceSizeChange($event)"></app-size-detector>
+	<div class="main-content">
+		<div class="gridster-wrapper">
+			<gridster [options]="options" class="gridster white-bkd" #gridster>
+				<gridster-item [item]="item" *ngFor="let item of dashboardWidgets;let index = index;" [class]="item.properties?.className +' '+ item.componentName" [ngStyle]="{'background': (item.type == 'counter' ? item.widgetProperty?.background : '#fff'),'width':item.properties?.w+'px','height':item.properties?.h+'px'}">
+         <app-widget-counter-a *ngIf="item.componentName === 'widget-counter-a'" [resizeEvent]="resizeEvent" [widget]="item" [count]="overview?.totalEntities">
+            </app-widget-counter-a>
+            <app-widget-counter-b *ngIf="item.componentName === 'widget-counter-b'" [resizeEvent]="resizeEvent" [widget]="item" [count]="{total:overview?.totalDevices,active:overview?.totalConnected,inactive:overview?.totalDisConnected}">
+            </app-widget-counter-b>
+            <app-widget-counter-c *ngIf="item.componentName === 'widget-counter-c'" [resizeEvent]="resizeEvent" [widget]="item" [count]="{minDeviceName:overview?.minDeviceName,maxDeviceName:overview?.maxDeviceName,total:overview?.totalEnergyCount,active:overview?.maxDeviceCount,inactive:overview?.minDeviceCount}">
+            </app-widget-counter-c>
+            <app-widget-counter-d *ngIf="item.componentName === 'widget-counter-d'" [resizeEvent]="resizeEvent" [widget]="item" [count]="overview?.totalUnderMaintenanceCount">
+            </app-widget-counter-d>
+            <app-widget-counter-e *ngIf="item.componentName === 'widget-counter-e'" [resizeEvent]="resizeEvent" [widget]="item" [count]="overview?.totalAlerts">
+            </app-widget-counter-e>
+            <app-widget-alert-a *ngIf="item.componentName === 'widget-alert-a'" [resizeEvent]="resizeEvent" [alertLimitchangeEvent]="alertLimitchangeEvent" [widget]="item">
+            </app-widget-alert-a>
+            <app-widget-map-a *ngIf="item.componentName === 'widget-map-a'" [resizeEvent]="resizeEvent" [widget]="item" [zoomChangeEvent]="zoomChangeEvent">
+            </app-widget-map-a>
+            <app-widget-upcomingmaintaince-a *ngIf="item.componentName === 'widget-upcomingmaintaince-a'" [resizeEvent]="resizeEvent" [alertLimitchangeEvent]="alertLimitchangeEvent" [widget]="item">
+            </app-widget-upcomingmaintaince-a>
+            <app-widget-chart-b [class]="item.properties?.className +' '+ item.componentName" [ngStyle]="{'width':item.properties?.w+'px',
+            'height':item.properties?.h+'px'}" *ngIf="item.componentName === 'widget-chart-b'" [resizeEvent]="resizeEvent" [chartTypeChangeEvent]="chartTypeChangeEvent" [telemetryDeviceChangeEvent]="telemetryDeviceChangeEvent" [telemetryAttributeChangeEvent]="telemetryAttributeChangeEvent" [widget]="item" [deviceData]="deviceData"></app-widget-chart-b>
+            <!--<app-widget-counter-c *ngIf="item.componentName === 'widget-counter-c'" [resizeEvent]="resizeEvent" [widget]="item" [count]="totalEneryGenerated">
+            </app-widget-counter-c>
+            <app-widget-counter-d *ngIf="item.componentName === 'widget-counter-d'" [resizeEvent]="resizeEvent" [widget]="item" [count]="totalFuelUsed">
+            </app-widget-counter-d>
+            <app-widget-counter-e *ngIf="item.componentName === 'widget-counter-e'" [resizeEvent]="resizeEvent" [widget]="item" [count]="totalAlerts">
+            </app-widget-counter-e>
+            <app-widget-counter-f *ngIf="item.componentName === 'widget-counter-f'" [resizeEvent]="resizeEvent" [widget]="item" [count]="{total:totalUserCount,active:activeUserCount,inactive:inactiveUserCount}">
+            </app-widget-counter-f>
+  
+            <app-widget-alert-a *ngIf="item.componentName === 'widget-alert-a'" [resizeEvent]="resizeEvent" [alertLimitchangeEvent]="alertLimitchangeEvent" [widget]="item">
+            </app-widget-alert-a>
+  
+            <app-widget-chart-a [class]="item.properties?.className +' '+ item.componentName" [ngStyle]="{'width':item.properties?.w+'px',
+            'height':item.properties?.h+'px'}" *ngIf="item.componentName === 'widget-chart-a'" [resizeEvent]="resizeEvent" [chartTypeChangeEvent]="chartTypeChangeEvent" [widget]="item" [gridster]="gridster"></app-widget-chart-a>
+  
+            <app-widget-chart-b [class]="item.properties?.className +' '+ item.componentName" [ngStyle]="{'width':item.properties?.w+'px',
+            'height':item.properties?.h+'px'}" *ngIf="item.componentName === 'widget-chart-b'" [resizeEvent]="resizeEvent" [chartTypeChangeEvent]="chartTypeChangeEvent" [widget]="item"></app-widget-chart-b>
+  
+            <app-widget-map-a *ngIf="item.componentName === 'widget-map-a'" [resizeEvent]="resizeEvent" [widget]="item" [zoomChangeEvent]="zoomChangeEvent">
+            </app-widget-map-a> -->
+           
+				</gridster-item>
+			</gridster>
+		</div>
+	</div>
+</div>

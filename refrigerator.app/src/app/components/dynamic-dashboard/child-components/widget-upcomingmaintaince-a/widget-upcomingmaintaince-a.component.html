@@ -1,0 +1,21 @@
+<div class="drag-body dashboard-widget">
+	<div class="panel-heading" [ngStyle]="{'background':widget?.widgetProperty?.background}">
+		<h5 class="panel-title" [ngStyle]="{'font-size':widget?.widgetProperty?.fontSize+'px','font-family':widget?.widgetProperty?.fontFamily, 'color':widget?.widgetProperty?.fontColor}"> {{widget?.widgetProperty?.title}} </h5>
+		<div class="tab-link-bar">
+		</div>
+	</div>
+	<mat-card class="dashboard-card mat-card">
+		<ng-scrollbar class="my-scrollbar m-b-50" trackX="false" trackY="true" autohide="false" [compact]="false" *ngIf="upcomingMaintenance.length">
+			<ul class="maintenance-card-list ">
+				<li *ngFor="let maintenance of upcomingMaintenance">
+					<span class="maintain-name">{{maintenance.deviceName}} - {{maintenance.entityName}}</span>
+					<span class="maintain-details">{{maintenance.description}}</span>
+					<div class="maintenance-date text-right">
+						<span>{{getLocalDate(maintenance['startDate'])}}</span>
+					</div>
+				</li>
+			</ul>
+		</ng-scrollbar>
+		<div *ngIf="upcomingMaintenance.length==0" class="no-records-maintenance centerclass">No records found</div>
+	</mat-card>
+</div>

@@ -1,0 +1,354 @@
+<!-- Content Header (Page header) -->
+
+<section class="content-header">
+  <h1>{{moduleName}}</h1>
+</section>
+<!-- Main content -->
+
+<section class="content">
+  <mat-card class="support-card">
+    <div class="row">
+      <div class="col col-ld-11">
+        <form [formGroup]="refrigeratorForm" (ngSubmit)="addRefrigerator()" autocomplete="off" class="form-horizontal common-form">
+          <div class="row">
+            <div class="col-md-6">
+              <fieldset class="form-group form-field">
+                <label class="form-label">Name<b>*</b></label>
+                <mat-form-field>
+                  <input matInput name="name" formControlName="name" maxlength="60" type="text" [(ngModel)]="refrigeratorObject['name']"
+                         class="form-control" tabindex="1" placeholder="Name">
+                  <div class="form-control-feedback" *ngIf="refrigeratorForm.controls['name'].errors">
+                    <p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['name'].errors.required && checkSubmitStatus">
+                      Please enter Name
+                    </p>
+                    <p class="form-tooltip-error sm " [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['name'].hasError('whitespace')">
+                      Please enter valid data
+                    </p>
+                  </div>
+                </mat-form-field>
+              </fieldset>
+            </div>
+            <div class="col-md-6">
+              <fieldset class="form-group form-field">
+                <label class="form-label">Location<b>*</b></label>
+                <mat-form-field>
+                  <mat-select placeholder="select Location" formControlName="entityGuid" tabindex="2" [(ngModel)]="refrigeratorObject['entityGuid']">
+                    <mat-option *ngFor="let location of locationList" [value]="location?.value | lowercase">
+                      {{location.text}}
+                    </mat-option>
+                  </mat-select>
+                  <div class="form-control-feedback" *ngIf="refrigeratorForm.controls['entityGuid'].errors">
+                    <p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['entityGuid'].errors.required && checkSubmitStatus">
+                      Please select Location
+                    </p>
+                  </div>
+                </mat-form-field>
+              </fieldset>
+            </div>
+         
+            <div class="col-md-6">
+              <fieldset class="form-group form-field">
+                <label class="form-label">Type<b>*</b></label>
+                <mat-form-field>
+                  <mat-select tabindex="3" placeholder="Select Type" formControlName="typeGuid" [(ngModel)]="refrigeratorObject['typeGuid']">
+                    <mat-option *ngFor="let type of typeList" [value]="type.value | lowercase">
+                      {{type.text}}
+                    </mat-option>
+                  </mat-select>
+                  <div class="form-control-feedback" *ngIf="refrigeratorForm.controls['typeGuid'].errors">
+                    <p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['typeGuid'].errors.required && checkSubmitStatus">
+                      Please select Type
+                    </p>
+                  </div>
+                </mat-form-field>
+              </fieldset>
+            </div>
+          
+            <div class="col-md-6">
+              <fieldset class="form-group form-field">
+                <label class="form-label">Refrigerator ID<b>*</b></label>
+                <mat-form-field>
+                  <input matInput name="uniqueId" formControlName="uniqueId" type="text" [(ngModel)]="refrigeratorObject['uniqueId']"
+                         class="form-control" tabindex="5" placeholder="Refrigerator ID">
+                  <div class="form-control-feedback" *ngIf="refrigeratorForm.controls['uniqueId'].errors">
+                    <p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['uniqueId'].errors.required && checkSubmitStatus">
+                      Please enter Refrigerator ID
+                    </p>
+                    <p class="form-tooltip-error sm " [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['uniqueId'].errors.pattern && checkSubmitStatus">
+                      Special characters and white space not allowed in Refrigerator ID
+                    </p>
+                    <p class="form-tooltip-error sm " [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['uniqueId'].hasError('whitespace')">
+                      Please enter valid data
+                    </p>
+                  </div>
+                </mat-form-field>
+              </fieldset>
+            </div>
+            <div class="col-md-6">
+              <fieldset class="form-group form-field">
+                <label class="form-label">Model<b>*</b></label>
+                <mat-form-field>
+                  <input matInput name="model" formControlName="model" type="text" [(ngModel)]="refrigeratorObject['model']"
+                         class="form-control" tabindex="6" placeholder="Model" maxlength="25">
+                  <div class="form-control-feedback" *ngIf="refrigeratorForm.controls['model'].errors">
+                    <p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['model'].errors.required && checkSubmitStatus">
+                      Please enter Model
+                    </p>
+                    <p class="form-tooltip-error sm " [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['model'].hasError('whitespace')">
+                      Please enter valid data
+                    </p>
+                  </div>
+                </mat-form-field>
+              </fieldset>
+            </div>
+         
+            <div class="col-md-6">
+              <fieldset class="form-group form-field">
+                <label class="form-label">Power<b>*</b></label>
+                <mat-form-field>
+                  <input matInput name="power" formControlName="power" type="text" [(ngModel)]="refrigeratorObject['power']"
+                         class="form-control" tabindex="7" placeholder="Power" maxlength="25">
+                  <div class="form-control-feedback" *ngIf="refrigeratorForm.controls['power'].errors">
+                    <p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['power'].errors.required && checkSubmitStatus">
+                      Please enter Power
+                    </p>
+                    <p class="form-tooltip-error sm " [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['power'].hasError('whitespace')">
+                      Please enter valid data
+                    </p>
+                    <p class="form-tooltip-error sm " [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['power'].errors.pattern && checkSubmitStatus">
+                      Only numeric value allowed
+                    </p>
+                  </div>
+                </mat-form-field>
+              </fieldset>
+            </div>
+            <div class="col-md-6">
+              <fieldset class="form-group form-field">
+                <label class="form-label">Voltage<b>*</b></label>
+                <mat-form-field>
+                  <input matInput name="voltage" formControlName="voltage" type="text" [(ngModel)]="refrigeratorObject['voltage']"
+                         class="form-control" tabindex="8" placeholder="Voltage" maxlength="20">
+                  <div class="form-control-feedback" *ngIf="refrigeratorForm.controls['voltage'].errors">
+                    <p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['voltage'].errors.required && checkSubmitStatus">
+                      Please enter Voltage
+                    </p>
+                    <p class="form-tooltip-error sm " [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['voltage'].hasError('whitespace')">
+                      Please enter valid data
+                    </p>
+                    <p class="form-tooltip-error sm " [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['voltage'].errors.pattern && checkSubmitStatus">
+                      Only numeric value allowed
+                    </p>
+                  </div>
+                </mat-form-field>
+              </fieldset>
+            </div>
+         
+            <div class="col-md-6">
+              <fieldset class="form-group form-field">
+                <label class="form-label">Capacity<b>*</b></label>
+                <mat-form-field>
+                  <input matInput name="capacity" formControlName="capacity" type="text" [(ngModel)]="refrigeratorObject['capacity']"
+                         class="form-control" tabindex="9" placeholder="Capacity" maxlength="20">
+                  <div class="form-control-feedback" *ngIf="refrigeratorForm.controls['capacity'].errors">
+                    <p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['capacity'].errors.required && checkSubmitStatus">
+                      Please enter Capacity
+                    </p>
+                    <p class="form-tooltip-error sm " [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['capacity'].hasError('whitespace')">
+                      Please enter valid data
+                    </p>
+                    <p class="form-tooltip-error sm " [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['capacity'].errors.pattern && checkSubmitStatus">
+                      Only numeric value allowed
+                    </p>
+                  </div>
+                </mat-form-field>
+              </fieldset>
+            </div>
+            <div class="col-md-6">
+              <fieldset class="form-group form-field">
+                <label class="form-label">Net Weight<b>*</b></label>
+                <mat-form-field>
+                  <input matInput name="netWeight" formControlName="netWeight" type="text" [(ngModel)]="refrigeratorObject['netWeight']"
+                         class="form-control" tabindex="10" placeholder="Net Weight" maxlength="20">
+                  <div class="form-control-feedback" *ngIf="refrigeratorForm.controls['netWeight'].errors">
+                    <p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['netWeight'].errors.required && checkSubmitStatus">
+                      Please enter Net Weight
+                    </p>
+                    <p class="form-tooltip-error sm " [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['netWeight'].hasError('whitespace')">
+                      Please enter valid data
+                    </p>
+                    <p class="form-tooltip-error sm " [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['netWeight'].errors.pattern && checkSubmitStatus">
+                      Only numeric value allowed
+                    </p>
+                  </div>
+                </mat-form-field>
+              </fieldset>
+            </div>
+        
+            <div class="col-md-6">
+              <fieldset class="form-group form-field">
+                <label class="form-label">Specification</label>
+                <mat-form-field>
+                  <textarea matInput rows="3" maxlength="260" tabindex="11" class="form-control" formControlName="specification"
+                            placeholder="Specification" name="specification" [(ngModel)]="refrigeratorObject['specification']"></textarea>
+                </mat-form-field>
+              </fieldset>
+            </div>
+            <div class="col-md-6">
+              <fieldset class="form-group form-field">
+                <label class="form-label">Description</label>
+                <mat-form-field>
+                  <textarea matInput rows="3" maxlength="260" tabindex="12" class="form-control" formControlName="description"
+                            placeholder="Description" name="description" [(ngModel)]="refrigeratorObject['description']"></textarea>
+                </mat-form-field>
+              </fieldset>
+            </div>
+         
+          
+            <div class="col-md-12">
+              <mat-label>Refrigerator Image</mat-label>
+              <fieldset class="form-group">
+                <label for="myFile" class="upload-file" title=".jpg, .jpeg, .png">
+                  <input formControlName="imageFiles" id="myFile" tabindex="13"
+                         (change)="handleImageInput($event)" #myFile
+                         class="upload-image" type="file"
+                         accept=".jpg, .jpeg, .png" multiple />
+                  <div class="form-control-feedback" *ngIf="refrigeratorForm.controls['imageFiles'].errors">
+                    <p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['imageFiles'].errors.required && checkSubmitStatus">
+                      Upload Image
+                    </p>
+                  </div>
+                </label>
+              </fieldset>
+              <fieldset class="form-group">
+                <ul class="image-list m-b-30" *ngIf="selectedImages.length">
+                  <li *ngFor="let img of selectedImages">
+                    <div class="user-profle-image">
+                      <img alt="" class="img-fluid" #locationImg src="{{img.url}}" />
+                    </div>
+                    <span>
+                      <i class="material-icons" (click)="imagesRemove(img.name)">clear</i>
+                    </span>
+                  </li>
+                </ul>
+                <ul class="image-list added-media-carousel" *ngIf="refrigeratorObject['deviceImageFiles']">
+                  <ngx-slick-carousel class="carousel w-100"
+                    #refrigeratorCarousel="slick-carousel"
+                    [config]="slideConfig">
+                    <li ngxSlickItem *ngFor="let image of selectedImagesObj"
+                    class="carousel-list-item">
+                      <div class="user-profle-image">
+                        <img alt="" class="img-fluid" #locationImg
+                            src="{{image['guid'] == '00000000-0000-0000-0000-000000000000' || image['guid'] == null || image['guid'] == '' ? _appConstant.noImg: mediaUrl + image['filePath']}}" />
+                      </div>
+                      <span>
+                        <i class="material-icons" (click)="deleteImgModel(image.guid)">clear</i>
+                      </span>
+                    </li>
+                  </ngx-slick-carousel>
+                </ul>
+              </fieldset>
+           
+            </div>
+            <div class="col-md-12">
+              <mat-label>Media File</mat-label>
+              <fieldset class="form-group">
+                <label for="mediaFile" class="upload-file" title=".pdf,.doc,.docx">
+                  <input formControlName="mediaFiles" id="mediaFile" tabindex="14"
+                         (change)="handleMediaFileInput($event)" class="upload-image"
+                         type="file" accept=".pdf,.doc,.docx" multiple #mediaFile />
+                  <div class="form-control-feedback" *ngIf="refrigeratorForm.controls['mediaFiles'].errors">
+                    <p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+                       *ngIf="refrigeratorForm.controls['mediaFiles'].errors.required && checkSubmitStatus">
+                      Upload Media Files (doc, docx, pdf files only)
+                    </p>
+                  </div>
+                </label>
+              </fieldset>
+
+              <fieldset class="form-group">
+               
+                <ul class="upload-file-list m-b-15"
+                    *ngIf="refrigeratorObject['deviceMediaFiles']">
+                  <li *ngFor="let file of selectedFilesObj">
+                    <a href="javascript:;" class="file-name"
+                       [matTooltip]="file.description"
+                       matTooltipPosition="below">
+                      <i class="fas fa-file-pdf"
+                         *ngIf="file.fileName.split('.').slice(1, 2).join('.') == 'pdf'"></i>
+                      <i class="fas fa-file-word"
+                         *ngIf="file.fileName.split('.').slice(1, 2).join('.') == 'docx' ||
+                    file.fileName.split('.').slice(1, 2).join('.') == 'docx'"></i>
+                      <span>{{file.description}}</span>
+                    </a>
+                    <a href="javascript:;" *ngIf="selectedFiles"
+                       (click)="removeMediaImage(file.guid)">
+                      <i class="far fa-times-circle"></i>
+                    </a>
+                  </li>
+                </ul>
+                <ul class="upload-file-list">
+                  <li *ngFor="let file of selectedFiles">
+                    <a href="javascript:;" class="file-name"
+                       [matTooltip]="file.name"
+                       matTooltipPosition="below">
+                      <i class="fas fa-file-pdf"
+                         *ngIf="file.name.split('.').slice(1, 2).join('.') == 'pdf'"></i>
+                      <i class="fas fa-file-word"
+                         *ngIf="file.name.split('.').slice(1, 2).join('.') == 'docx' ||
+                      file.name.split('.').slice(1, 2).join('.') == 'docx'"></i>
+                      <span>{{file.name}}</span>
+                    </a>
+                    <a href="javascript:;" *ngIf="selectedFiles"
+                       (click)="fileRemove(file.name)">
+                      <i class="far fa-times-circle"></i>
+                    </a>
+                    <!-- {{file.name.split('.').slice(1, 2).join('.')}} -->
+                  </li>
+                </ul>
+
+              </fieldset>
+            </div>
+          </div>
+          <div class="row mt-4 mb-0">
+            <div class="col-lg-12">
+              <div class="form-field">
+                <div class="input-field ">
+                  <button mat-flat-button color="primary"
+                          class="text-white " title="Submit" type="submit" tabindex="15">
+                    Submit
+                  </button>
+                  <button mat-flat-button color="primary" class="text-white m-l-10" [routerLink]="['/refrigerators']"
+                          tabindex="16" title="Cancel">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </mat-card>
+</section>

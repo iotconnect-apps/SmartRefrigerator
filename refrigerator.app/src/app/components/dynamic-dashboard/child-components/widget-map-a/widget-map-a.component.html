@@ -1,0 +1,72 @@
+<div class="drag-body dashboard-widget">
+	<div class="panel-heading" [ngStyle]="{'background':widget?.widgetProperty?.background}">
+		<h5 class="panel-title"
+		[ngStyle]="{'font-size':widget?.widgetProperty?.fontSize+'px',
+		'font-family':widget?.widgetProperty?.fontFamily,
+		'color':widget?.widgetProperty?.fontColor}">{{widget?.widgetProperty?.title}} </h5>
+		<button mat-flat-button type="button" style = "
+		margin: 0px 0px 0px 109px"color="primary" title="Map" [ngClass]=" mapview ? 'active' : ''"
+		(click)="mapview = !mapview">Map</button>
+		<button mat-flat-button type="button" style="margin: 0px 45px 0px 0px;" color="primary" class="ml-3" title="List"
+		[ngClass]="!mapview ? 'active' : ''" (click)="mapview = !mapview">List</button>
+	</div>
+	
+	<mat-card class="dashboard-card mat-card p-0" style="padding: 0px !important;">
+		<div *ngIf="!mapview" id="map-list">
+		  <div class="map-list-wrapper" [ngStyle]="{'height':mapHeight}">
+			<div class="user-grid-wrapper  p-3 pb-0 user-grid-wrapper-dashboard" [ngStyle]="{'height':(widget?.properties?.h - 57)+'px'}">
+			  <section class="content-header p-t-10">
+				<h2 class="panel-title"> Locations </h2>
+				<div class="ml-auto content-header-action">
+				  <form>
+					<div>
+					  <app-search-render [searchValue]="searchParameters.searchText" (searchEvent)="searchTextCallback($event)">
+					  </app-search-render>
+					</div>
+					<div class="p-l-20">
+					  <button [routerLink]="['/locations/add']" type="button" mat-flat-button color="primary"
+						lass="text-white">
+						Add Location
+					  </button>
+					</div>
+				  </form>
+				</div>
+			  </section>
+			  <div class="row">
+				<div class="col-ld-4 col-lg-4 col-xl-4 m-b-30" *ngFor="let location of locationList">
+				  <div class="user-grid-box">
+					<div class="user-status-indicator status-green"></div>
+					<div class="grid-inner-flex d-flex align-items-center">
+					  <div class="user-image-box">
+						<img alt="" class="img-fluid ng-star-inserted"
+						  src="{{location['image'] == '00000000-0000-0000-0000-000000000000' || location['image'] == null ||  location['image'] == '' ? _appConstant.noImg: mediaUrl + location['image']}}">
+					  </div>
+					  <div class="user-detail-box">
+						<a [routerLink]="['/locations/details',location['guid']]">{{location['name']}}</a>
+						<p class="user-details">Refrigerator <span>{{location.totalDevices}}</span></p>
+					  </div>
+					</div>
+				  </div>
+				</div>
+				<div *ngIf="locationList.length === 0" class="no-record-found centerclass">No records found</div>
+			  </div>
+			</div>
+		</div>
+	</div>
+
+
+	<div *ngIf="mapview" id="map-view">
+		<agm-map [latitude]="lat" [longitude]="lng" [ngStyle]="{'height':mapHeight}" *ngIf="locationList.length > 0" [zoom]="widget?.widgetProperty?.zoom">
+			<agm-marker *ngFor="let loc of locationList " [latitude]="loc.latitude ? loc.latitude : lat" [longitude]="loc.longitude ? loc.longitude : lng" [iconUrl]="{ url: '../../../../assets/images/greenhouse-location-icon.svg'}">
+				<agm-info-window [isOpen]="true" #infoWindow>
+					<strong><b>{{loc.name}}</b></strong><br>
+					<strong>Refrigerator:{{loc.totalDevices}}</strong><br>
+					<strong>Alerts:{{loc.totalAlert}}</strong>
+				</agm-info-window>
+			</agm-marker>
+		</agm-map>
+		<div *ngIf="locationList.length === 0" class="no-record-found centerclass">No records found</div>
+	</div>
+	
+	  </mat-card>
+</div>
